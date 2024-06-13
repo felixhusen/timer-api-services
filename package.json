@@ -14,11 +14,11 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.2",
     "express": "^4.19.2",
-    "rimraf": "^5.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "rimraf": "^5.0.7",
     "-": "^0.0.1",
     "cors": "^2.8.5",
     "nodemon": "^3.1.3",
