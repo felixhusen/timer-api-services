@@ -17,5 +17,5 @@ jobs:
       - name: Push to dokku
         uses: dokku/github-action@master
         with:
-          git_remote_url: 'ssh://dokku@ec2-52-62-92-200.ap-southeast-2.compute.amazonaws.com:timer-api-services'
+          git_remote_url: 'ssh://dokku@ec2-52-62-92-200.ap-southeast-2.compute.amazonaws.com:22/timer-api-services'
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
