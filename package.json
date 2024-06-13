@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon - exec 'ts-node' index.ts",
-    "start": "npm run build && node dist/index.js",
+    "start": "NODE_ENV=production node dist/index.js",
     "build": "rimraf ./dist && tsc"
   },
   "author": "",
