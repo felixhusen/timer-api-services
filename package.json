@@ -7,9 +7,9 @@
     "start": "NODE_ENV=production node dist/index.js",
     "build": "rimraf ./dist && tsc"
   },
-  "author": "",
+  "author": "Felix Husen",
   "license": "ISC",
-  "description": "",
+  "description": "Timer API Services",
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/node": "^20.14.2",
