@@ -27,7 +27,10 @@ function startTimer(timerId: string) {
     timerDetail.currentDuration--;
 
     // Send websocket timer message to the client
-    io.sockets.emit('timer', { timerId, currentDuration: timerDetail.currentDuration });
+    io.sockets.emit('timer', {
+      timerId,
+      currentDuration: timerDetail.currentDuration,
+    });
 
     const currentDuration = timerDetail.currentDuration;
     if (currentDuration <= 0) {
@@ -137,7 +140,7 @@ app.post(
 
     res.json({
       success: true,
-      data: newTimer,
+      data: { ...newTimer, timerId },
     });
   }
 );
