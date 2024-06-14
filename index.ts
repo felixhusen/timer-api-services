@@ -21,6 +21,11 @@ const io = new Server(server, {
 const port = process.env.PORT || 3000;
 const timers: Record<string, ITimerDetail> = {};
 
+/**
+ * Start timer function
+ * @param timerId The timer ID
+ * @returns The timeoutId returned by `setInterval`
+ */
 function startTimer(timerId: string) {
   const timerIntervalFn = () => {
     const timerDetail = timers[timerId];
@@ -48,10 +53,11 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Timer-Api-Services');
+  res.send('Timer API Services');
 });
 
 app.get('/timer', (req: Request, res: Response) => {
+  // Map the `timerDetails` object to array
   const timerDetails = Object.keys(timers ?? {}).map((timerId) => {
     const timerDetail = timers[timerId];
 
@@ -64,6 +70,7 @@ app.get('/timer', (req: Request, res: Response) => {
     };
   });
 
+  // Count the paused and ongoing timer stats
   const pausedTimerCount = timerDetails.filter(
     (timer) => timer.state === TimerState.paused
   ).length;
@@ -85,12 +92,14 @@ app.post(
   '/timer/start',
   (req: Request<any, any, IPauseTimerRequestBody>, res: Response) => {
     const { timerId } = req.body;
-
     const timerDetail = timers[timerId];
+
+    // Start timer validation
     if (!timerDetail) throw Error('Timer with the provided ID does not exist.');
     if (timerDetail.state === TimerState.ongoing)
       throw Error('The timer has already started.');
 
+    // Start the timer, update the state and assign new timeoutId
     const timeoutId = startTimer(timerId);
     timerDetail.state = TimerState.ongoing;
     timers[timerId].timeoutId = timeoutId;
@@ -100,15 +109,35 @@ app.post(
 );
 
 app.post(
-  '/timer/pause',
+  '/timer/delete',
   (req: Request<any, any, IPauseTimerRequestBody>, res: Response) => {
     const { timerId } = req.body;
 
     const timerDetail = timers[timerId];
     if (!timerDetail) throw Error('Timer with the provided ID does not exist.');
+
+    // Clear interval if the timer is still running
+    if (timerDetail.state === TimerState.ongoing)
+      clearInterval(timerDetail.timeoutId);
+
+    delete timers[timerId];
+
+    res.json({ success: true, data: { timerId } });
+  }
+);
+
+app.post(
+  '/timer/pause',
+  (req: Request<any, any, IPauseTimerRequestBody>, res: Response) => {
+    const { timerId } = req.body;
+    const timerDetail = timers[timerId];
+
+    // Pause timer validation
+    if (!timerDetail) throw Error('Timer with the provided ID does not exist.');
     if (timerDetail.state === TimerState.paused)
       throw Error('The timer has already been paused.');
 
+    // Change the state to `paused` and clear the interval
     timerDetail.state = TimerState.paused;
     clearInterval(timerDetail.timeoutId);
 
