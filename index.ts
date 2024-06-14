@@ -57,6 +57,7 @@ app.get('/timer', (req: Request, res: Response) => {
       state: timerDetail.state,
       originalDuration: timerDetail.originalDuration,
       currentDuration: timerDetail.currentDuration,
+      createdAt: timerDetail.createdAt,
     };
   });
 
@@ -118,24 +119,25 @@ app.post(
   '/timer/add',
   (req: Request<any, any, IAddTimerRequestBody>, res: Response) => {
     const { duration } = req.body;
-    const timerId = randomUUID();
 
+    // Generate `timerId` and
+    const timerId = randomUUID();
+    const createdAt = new Date().toISOString();
+
+    // Start the timer and create a new timer detail obj
     const timeoutId = startTimer(timerId);
-    timers[timerId] = {
+    const newTimer: ITimerDetail = {
       state: TimerState.ongoing,
       originalDuration: duration,
       currentDuration: duration,
-      timeoutId,
+      createdAt,
     };
+
+    timers[timerId] = { ...newTimer, timeoutId };
 
     res.json({
       success: true,
-      data: {
-        timerId,
-        state: TimerState.ongoing,
-        originalDuration: duration,
-        currentDuration: duration,
-      },
+      data: newTimer,
     });
   }
 );

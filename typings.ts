@@ -19,4 +19,5 @@ export interface ITimerDetail {
   currentDuration: number;
   /** @description NodeJS timeout object created from the `setInterval` function */
   timeoutId?: NodeJS.Timeout;
+  createdAt?: string;
 }
